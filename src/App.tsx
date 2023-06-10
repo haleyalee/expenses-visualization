@@ -1,17 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Axios from 'axios';
-
-interface IExpense {
-  name: string,
-  category: string[],
-  date: string,
-  amount: number
-}
-
-interface IDatabase {
-  title: string,
-  expenses: IExpense[]
-}
+import { IDatabase, dayAvgSpending, netSpending, numToDollar, sumCategory, totalExpense, totalIncome } from './helper';
 
 function App() {
   const [database, setDatabase] = useState<IDatabase|null>(null);
@@ -22,22 +11,16 @@ function App() {
     .catch(err => console.log(err));
   }, []);
 
-  const numToDollar = (amt: number): string => {
-    let dollar = ''
-    if (amt < 0) {
-      let a = amt * -1;
-      dollar += '-$' + a?.toFixed(2)
-    }
-    else dollar += '$' + amt?.toFixed(2);
-
-    return dollar;
-  };
-  
   return (
     <>
       <h1>My expenses</h1>
       {database && <>
         <h2>{database.title}</h2>
+        <h3>Groceries total: { sumCategory(database.expenses, 'groceries')}</h3>
+        <h3>Total expenses: { totalExpense(database.expenses) }</h3>
+        <h3>Total income: { totalIncome(database.expenses) }</h3>
+        <h3>Total spending: { netSpending(database.expenses) }</h3>
+        <h3>Average spending: { dayAvgSpending(database) }</h3>
         {database.expenses.map((e,i) => 
           <div key={i}>
             <p>Name: {e.name} </p>

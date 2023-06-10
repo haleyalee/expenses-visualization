@@ -3,20 +3,6 @@ const sumSpending = (exp:IExpense[]) => {
   return sum;
 }
 
-/* Interface for single expense */
-export interface IExpense {
-  name: string,
-  category: string[],
-  date: string,
-  amount: number
-}
-
-/* Interface for single database */
-export interface IDatabase {
-  title: string,
-  expenses: IExpense[]
-}
-
 const dollarToNum = (dollar: string): number => {
   let amt = 0;
   if (dollar.includes('-')) amt = parseFloat(dollar.slice(2));

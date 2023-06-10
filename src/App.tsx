@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Axios from 'axios';
-import { IDatabase, dayAvgSpending, netSpending, numToDollar, sumCategory, totalExpense, totalIncome } from './helper';
+import {CATEGORY} from './constants/expenses';
+import { dayAvgSpending, netSpending, numToDollar, sumCategory, totalExpense, totalIncome } from './helper';
 
 function App() {
   const [database, setDatabase] = useState<IDatabase|null>(null);
@@ -14,9 +15,10 @@ function App() {
   return (
     <>
       <h1>My expenses</h1>
+
       {database && <>
         <h2>{database.title}</h2>
-        <h3>Groceries total: { sumCategory(database.expenses, 'groceries')}</h3>
+        <h3>Groceries total: { sumCategory(database.expenses, CATEGORY.GROCERIES)}</h3>
         <h3>Total expenses: { totalExpense(database.expenses) }</h3>
         <h3>Total income: { totalIncome(database.expenses) }</h3>
         <h3>Total spending: { netSpending(database.expenses) }</h3>

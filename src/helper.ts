@@ -1,9 +1,11 @@
+import { CATEGORY } from "./constants/expenses";
+
 const sumSpending = (exp:IExpense[]) => {
   const sum = exp.map((e) => e.amount).reduce((acc, curr) => acc + curr, 0);
   return sum;
 }
 
-const dollarToNum = (dollar: string): number => {
+export const dollarToNum = (dollar: string): number => {
   let amt = 0;
   if (dollar.includes('-')) amt = parseFloat(dollar.slice(2));
   else amt = parseFloat(dollar.slice(1));
@@ -16,7 +18,7 @@ const dollarToNum = (dollar: string): number => {
  *  amt:number              e.g. -11.5
  * Returns: string          e.g. `-$11.50`
 */
-export const numToDollar = (amt: number): string => {
+const numToDollar = (amt: number): string => {
   let dollar = ''
   if (amt < 0) {
     let a = amt * -1;
@@ -33,7 +35,7 @@ export const numToDollar = (amt: number): string => {
  *  category:string         e.g. `groceries`
  * Returns: string          e.g. `-$185.33`
 */
-export const sumCategory = (databaseExp:IExpense[], category:string): string => {
+const sumCategory = (databaseExp:IExpense[], category:string): string => {
   const catExpArr:IExpense[] = databaseExp.filter((e) => e.category.includes(category));
   return numToDollar(sumSpending(catExpArr));
 };
@@ -44,7 +46,7 @@ export const sumCategory = (databaseExp:IExpense[], category:string): string => 
 *   databaseExp:IExpense[]
 *  Returns: string          e.g. `-$3400.00`
 */
-export const totalExpense = (databaseExp:IExpense[]): string => {
+const totalExpense = (databaseExp:IExpense[]): string => {
   const spendingArr = databaseExp.filter((e) => e.amount < 0);
   return numToDollar(sumSpending(spendingArr));
 }
@@ -55,7 +57,7 @@ export const totalExpense = (databaseExp:IExpense[]): string => {
 *   databaseExp:IExpense[]
 *  Returns: string          e.g. `$4300.00`
 */
-export const totalIncome = (databaseExp:IExpense[]): string => {
+const totalIncome = (databaseExp:IExpense[]): string => {
   const spendingArr = databaseExp.filter((e) => e.amount >= 0);
   return numToDollar(sumSpending(spendingArr));
 }
@@ -66,7 +68,7 @@ export const totalIncome = (databaseExp:IExpense[]): string => {
 *   databaseExp:IExpense[]
 *  Returns: string          e.g. `$500.00`
 */
-export const netSpending = (databaseExp:IExpense[]):string => {
+const netSpending = (databaseExp:IExpense[]):string => {
   return numToDollar(sumSpending(databaseExp));
 }
 
@@ -76,7 +78,7 @@ export const netSpending = (databaseExp:IExpense[]):string => {
 *   databaseExp:IExpense[]
 *  Returns: string          e.g. `-$50/day`
 */
-export const dayAvgSpending = (database:IDatabase): string => {
+const dayAvgSpending = (database:IDatabase): string => {
   let days = 30;
   if (database.title.includes('February')) days = 28;
   else if (database.title.includes('January') ||
@@ -90,4 +92,27 @@ export const dayAvgSpending = (database:IDatabase): string => {
 
   const avg = dollarToNum(totalExpense(database.expenses))/days;
   return numToDollar(avg) + '/day';
+}
+
+export const getSpendingSummary = (database:IDatabase):ISpendingSummary => {
+  return {
+    title: database.title,
+    byCategory: [
+      { label: CATEGORY.SHOPPING, amt: sumCategory(database.expenses, CATEGORY.SHOPPING) },
+      // { label: CATEGORY.WORK, amt: sumCategory(database.expenses, CATEGORY.WORK) },
+      { label: CATEGORY.EATOUT, amt: sumCategory(database.expenses, CATEGORY.EATOUT) },
+      { label: CATEGORY.TRAVEL, amt: sumCategory(database.expenses, CATEGORY.TRAVEL) },
+      { label: CATEGORY.TRANSPORTATION, amt: sumCategory(database.expenses, CATEGORY.TRANSPORTATION) },
+      { label: CATEGORY.GROCERIES, amt: sumCategory(database.expenses, CATEGORY.GROCERIES) },
+      { label: CATEGORY.DRINKS, amt: sumCategory(database.expenses, CATEGORY.DRINKS) },
+      { label: CATEGORY.ENTERTAINMENT, amt: sumCategory(database.expenses, CATEGORY.ENTERTAINMENT) },
+      { label: CATEGORY.OTHER, amt: sumCategory(database.expenses, CATEGORY.OTHER) },
+      { label: CATEGORY.COFFEETEA, amt: sumCategory(database.expenses, CATEGORY.COFFEETEA) },
+      { label: CATEGORY.SUBSCRIPTION, amt: sumCategory(database.expenses, CATEGORY.SUBSCRIPTION) },
+    ],
+    totalExpense: { label: "Total Expenses", amt: totalExpense(database.expenses) },
+    totalIncome: { label: "Total Income", amt: totalIncome(database.expenses) },
+    netSpending: { label: "Net Spending", amt: netSpending(database.expenses) },
+    dayAvgSpending: { label: "Average Spending Per Day", amt: dayAvgSpending(database) }
+  }
 }

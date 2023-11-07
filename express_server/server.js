@@ -1,3 +1,8 @@
+/*
+ * Local server that connects to Notion API
+ * To run: `node server.js`
+ */
+
 const express = require('express');
 const { Client } = require('@notionhq/client');
 const cors = require('cors');

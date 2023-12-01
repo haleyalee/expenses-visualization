@@ -14,9 +14,9 @@ interface IDatabase {
 
 interface ISpendingSummary {
   title: string,
-  byCategory: ({ label: string, amt: string })[]
-  totalExpense: { label: string, amt: string },
-  totalIncome: { label: string, amt: string },
-  netSpending: { label: string, amt: string },
-  dayAvgSpending: { label: string, amt: string },
+  byCategory: ({ label: string, amt: number })[]
+  totalExpense: { label: string, amt: number },
+  totalIncome: { label: string, amt: number },
+  netSpending: { label: string, amt: number },
+  dayAvgSpending: { label: string, amt: number },
 }

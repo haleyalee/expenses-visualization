@@ -1,31 +1,12 @@
 import { CATEGORY } from "./constants/expenses";
 
-const sumSpending = (exp:IExpense[]) => {
+const sumSpending = (exp:IExpense[]): number => {
   const sum = exp.map((e) => e.amount).reduce((acc, curr) => acc + curr, 0);
   return sum;
 }
 
-export const dollarToNum = (dollar: string): number => {
-  let amt = 0;
-  if (dollar.includes('-')) amt = parseFloat(dollar.slice(2));
-  else amt = parseFloat(dollar.slice(1));
-  return amt;
-}
-
-/* numToDollar
- * Helper function to format numbers into US currency
- * Parameters:
- *  amt:number              e.g. -11.5
- * Returns: string          e.g. `-$11.50`
-*/
-const numToDollar = (amt: number): string => {
-  let dollar = ''
-  if (amt < 0) {
-    let a = amt * -1;
-    dollar += '-$' + a?.toFixed(2)
-  }
-  else dollar += '$' + amt?.toFixed(2);
-  return dollar;
+export const toDollar = (amt: number): string => {
+  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amt);
 };
 
 /* sumCategory
@@ -33,52 +14,52 @@ const numToDollar = (amt: number): string => {
  * Parameters:
  *  databaseExp:IExpense[]
  *  category:string         e.g. `groceries`
- * Returns: string          e.g. `-$185.33`
+ *  Returns: numbrt         e.g. -185.33
 */
-const sumCategory = (databaseExp:IExpense[], category:string): string => {
+const sumCategory = (databaseExp:IExpense[], category:string): number => {
   const catExpArr:IExpense[] = databaseExp.filter((e) => e.category.includes(category));
-  return numToDollar(sumSpending(catExpArr));
+  return sumSpending(catExpArr);
 };
 
 /* totalExpense
 *  Helper function to compute total expenses of specified database month
 *  Parameters:
 *   databaseExp:IExpense[]
-*  Returns: string          e.g. `-$3400.00`
+*  Returns: number          e.g. -3400.0
 */
-const totalExpense = (databaseExp:IExpense[]): string => {
+const totalExpense = (databaseExp:IExpense[]): number => {
   const spendingArr = databaseExp.filter((e) => e.amount < 0);
-  return numToDollar(sumSpending(spendingArr));
+  return sumSpending(spendingArr);
 }
 
 /* totalIncome
 *  Helper function to compute total income of specified database month
 *  Parameters:
 *   databaseExp:IExpense[]
-*  Returns: string          e.g. `$4300.00`
+*  Returns: number          e.g. 4300.0
 */
-const totalIncome = (databaseExp:IExpense[]): string => {
+const totalIncome = (databaseExp:IExpense[]): number => {
   const spendingArr = databaseExp.filter((e) => e.amount >= 0);
-  return numToDollar(sumSpending(spendingArr));
+  return sumSpending(spendingArr);
 }
 
 /* netSpending
 *  Helper function to compute total sum (expenses + income) of specified database month
 *  Parameters:
 *   databaseExp:IExpense[]
-*  Returns: string          e.g. `$500.00`
+*  Returns: number          e.g. 500.0
 */
-const netSpending = (databaseExp:IExpense[]):string => {
-  return numToDollar(sumSpending(databaseExp));
+const netSpending = (databaseExp:IExpense[]):number => {
+  return sumSpending(databaseExp);
 }
 
 /* dayAvgSpending
 *  Helper function to compute average spending per day of specified database month
 *  Parameters:
 *   databaseExp:IExpense[]
-*  Returns: string          e.g. `-$50/day`
+*  Returns: number          e.g. -50.0
 */
-const dayAvgSpending = (database:IDatabase): string => {
+const dayAvgSpending = (database:IDatabase): number => {
   let days = 30;
   if (database.title.includes('February')) days = 28;
   else if (database.title.includes('January') ||
@@ -90,8 +71,8 @@ const dayAvgSpending = (database:IDatabase): string => {
       database.title.includes('December') 
   ) days = 31;
 
-  const avg = dollarToNum(totalExpense(database.expenses))/days;
-  return numToDollar(avg) + '/day';
+  const avg = totalExpense(database.expenses)/days;
+  return avg;
 }
 
 export const getSpendingSummary = (database:IDatabase):ISpendingSummary => {

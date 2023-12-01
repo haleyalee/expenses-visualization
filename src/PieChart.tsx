@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import Chart from "chart.js/auto";
-import { CategoryScale } from "chart.js";
+import { CategoryScale, ChartOptions } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
-import { dollarToNum } from './helper';
+import { toDollar } from './helper';
 
 Chart.register(CategoryScale);
 
 const chartSettings = {
-  label: "-$",
   borderWidth: 1,
   borderColor: [
     "rgba(55,53,47,   1)",
@@ -41,7 +40,7 @@ const PieChart = (props: { data:ISpendingSummary } ) => {
     labels: data.byCategory.map((e) => e.label),
     datasets: [
       {
-        data: data.byCategory.map((e) => dollarToNum(e.amt)),
+        data: data.byCategory.map((e) => e.amt),
         ...chartSettings
       }
     ]
@@ -52,26 +51,59 @@ const PieChart = (props: { data:ISpendingSummary } ) => {
       labels: data.byCategory.map((e) => e.label),
       datasets: [
         { 
-          data: data.byCategory.map((e) => dollarToNum(e.amt)),
+          data: data.byCategory.map((e) => e.amt),
           ...chartSettings
         }
       ]
     })
   }, [data])
+
+  const options:ChartOptions<"doughnut"> = {
+    layout: {
+      padding: 0
+    },
+    plugins: {
+      legend: {
+        position: "right",
+        labels: {
+          filter: (item, context) => {
+            // removes unused categories from legend
+            return context.datasets[0].data[item.index ?? 0] !== 0 
+          },
+          sort: (a, b) => {
+            // sorts in alphabetical order
+            return (a.text > b.text) ? 1 : -1;
+          }
+        }
+      },
+      tooltip: {
+        displayColors: false,
+        titleAlign: "center",
+        bodyAlign: "center",
+        padding: 8,
+        callbacks: {
+          title: (context) => {
+            let title = context[0].label || "category";
+            const total = context[0].dataset.data.reduce((a, b) => a+b);
+            title += ` (${~~(context[0].parsed/total * 100)}%)`;
+            return title;
+          },
+          label: (context) => {
+            let label = context.dataset.label || '';
+            label += toDollar(context.parsed);
+            return label;
+          }
+        }
+      }
+    }
+  }
   
   return (
     <Doughnut
       data={chartData}
-      options={{
-        plugins: {
-          title: {
-            display: true,
-            text: `Expense Breakdown for ${data.title}`
-          }
-        }
-      }}
+      options={options}
     />
   )
 }
 
-export default PieChart
+export default PieChart;

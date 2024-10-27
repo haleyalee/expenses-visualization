@@ -1,33 +1,40 @@
 import { CATEGORY } from "./constants/expenses";
 
-const sumSpending = (exp:IExpense[]): number => {
-  const sum = exp.map((e) => e.amount).reduce((acc, curr) => acc + curr, 0);
-  return sum;
+export const getToday = (): string => {
+  const date = new Date();
+  let month = date.getMonth() + 1;
+  let year = date.getFullYear();
+  return `${year}-${month}`
 }
 
 export const toDollar = (amt: number): string => {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amt);
 };
 
+const sumSpending = (exp: Expense[]): number => {
+  const sum = exp.map((e) => e.amount).reduce((acc, curr) => acc + curr, 0);
+  return +(sum.toFixed(2));
+}
+
 /* sumCategory
  * Helper function to compute the total sum of a specified category month
  * Parameters:
- *  databaseExp:IExpense[]
+ *  databaseExp: Expense[]
  *  category:string         e.g. `groceries`
- *  Returns: numbrt         e.g. -185.33
+ *  Returns: number         e.g. -185.33
 */
-const sumCategory = (databaseExp:IExpense[], category:string): number => {
-  const catExpArr:IExpense[] = databaseExp.filter((e) => e.category.includes(category));
+const sumCategory = (databaseExp: Expense[], category: string): number => {
+  const catExpArr:Expense[] = databaseExp.filter((e) => e.category === category);
   return sumSpending(catExpArr);
 };
 
 /* totalExpense
 *  Helper function to compute total expenses of specified database month
 *  Parameters:
-*   databaseExp:IExpense[]
+*   databaseExp: Expense[]
 *  Returns: number          e.g. -3400.0
 */
-const totalExpense = (databaseExp:IExpense[]): number => {
+const totalExpense = (databaseExp: Expense[]): number => {
   const spendingArr = databaseExp.filter((e) => e.amount < 0);
   return sumSpending(spendingArr);
 }
@@ -35,10 +42,10 @@ const totalExpense = (databaseExp:IExpense[]): number => {
 /* totalIncome
 *  Helper function to compute total income of specified database month
 *  Parameters:
-*   databaseExp:IExpense[]
+*   databaseExp: Expense[]
 *  Returns: number          e.g. 4300.0
 */
-const totalIncome = (databaseExp:IExpense[]): number => {
+const totalIncome = (databaseExp: Expense[]): number => {
   const spendingArr = databaseExp.filter((e) => e.amount >= 0);
   return sumSpending(spendingArr);
 }
@@ -46,54 +53,27 @@ const totalIncome = (databaseExp:IExpense[]): number => {
 /* netSpending
 *  Helper function to compute total sum (expenses + income) of specified database month
 *  Parameters:
-*   databaseExp:IExpense[]
+*   databaseExp: Expense[]
 *  Returns: number          e.g. 500.0
 */
-const netSpending = (databaseExp:IExpense[]):number => {
+const netSpending = (databaseExp: Expense[]): number => {
   return sumSpending(databaseExp);
 }
 
-/* dayAvgSpending
-*  Helper function to compute average spending per day of specified database month
-*  Parameters:
-*   databaseExp:IExpense[]
-*  Returns: number          e.g. -50.0
-*/
-const dayAvgSpending = (database:IDatabase): number => {
-  let days = 30;
-  if (database.title.includes('February')) days = 28;
-  else if (database.title.includes('January') ||
-      database.title.includes('March') ||
-      database.title.includes('May') ||
-      database.title.includes('July') ||
-      database.title.includes('August') ||
-      database.title.includes('October') ||
-      database.title.includes('December') 
-  ) days = 31;
-
-  const avg = totalExpense(database.expenses)/days;
-  return avg;
-}
-
-export const getSpendingSummary = (database:IDatabase):ISpendingSummary => {
+export const getSpendingSummary = (month: MonthlyExpenses): SpendingSummary => {
   return {
-    title: database.title,
+    date: month.date,
     byCategory: [
-      { label: CATEGORY.SHOPPING, amt: sumCategory(database.expenses, CATEGORY.SHOPPING) },
-      // { label: CATEGORY.WORK, amt: sumCategory(database.expenses, CATEGORY.WORK) },
-      { label: CATEGORY.EATOUT, amt: sumCategory(database.expenses, CATEGORY.EATOUT) },
-      { label: CATEGORY.TRAVEL, amt: sumCategory(database.expenses, CATEGORY.TRAVEL) },
-      { label: CATEGORY.TRANSPORTATION, amt: sumCategory(database.expenses, CATEGORY.TRANSPORTATION) },
-      { label: CATEGORY.GROCERIES, amt: sumCategory(database.expenses, CATEGORY.GROCERIES) },
-      { label: CATEGORY.DRINKS, amt: sumCategory(database.expenses, CATEGORY.DRINKS) },
-      { label: CATEGORY.ENTERTAINMENT, amt: sumCategory(database.expenses, CATEGORY.ENTERTAINMENT) },
-      { label: CATEGORY.OTHER, amt: sumCategory(database.expenses, CATEGORY.OTHER) },
-      { label: CATEGORY.COFFEETEA, amt: sumCategory(database.expenses, CATEGORY.COFFEETEA) },
-      { label: CATEGORY.SUBSCRIPTION, amt: sumCategory(database.expenses, CATEGORY.SUBSCRIPTION) },
+      { label: CATEGORY.SHOPPING, amt: sumCategory(month.expenses, CATEGORY.SHOPPING) },
+      { label: CATEGORY.EATOUT, amt: sumCategory(month.expenses, CATEGORY.EATOUT) },
+      { label: CATEGORY.TRANSPORTATION, amt: sumCategory(month.expenses, CATEGORY.TRANSPORTATION) },
+      { label: CATEGORY.GROCERIES, amt: sumCategory(month.expenses, CATEGORY.GROCERIES) },
+      { label: CATEGORY.DRINKS, amt: sumCategory(month.expenses, CATEGORY.DRINKS) },
+      { label: CATEGORY.ENTERTAINMENT, amt: sumCategory(month.expenses, CATEGORY.ENTERTAINMENT) },
+      { label: CATEGORY.OTHER, amt: sumCategory(month.expenses, CATEGORY.OTHER) },
     ],
-    totalExpense: { label: "Total Expenses", amt: totalExpense(database.expenses) },
-    totalIncome: { label: "Total Income", amt: totalIncome(database.expenses) },
-    netSpending: { label: "Net Spending", amt: netSpending(database.expenses) },
-    dayAvgSpending: { label: "Average Spending Per Day", amt: dayAvgSpending(database) }
+    totalExpense: { label: "Total Expenses", amt: toDollar(totalExpense(month.expenses)) },
+    totalIncome: { label: "Total Income", amt: toDollar(totalIncome(month.expenses)) },
+    netSpending: { label: "Net Spending", amt: toDollar(netSpending(month.expenses)) },
   }
 }

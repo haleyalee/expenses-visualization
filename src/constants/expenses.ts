@@ -1,17 +1,12 @@
 export const CATEGORY = {
   INCOME: "income",
   SHOPPING: "shopping",
-  WORK: "work",
-  EATOUT: "eat out",
-  TRAVEL: "travel",
+  EATOUT: "eating out",
   TRANSPORTATION: 'transportation',
   GROCERIES: "groceries",
-  DRINKS: "drinks",
-  SNACKSDESSERT: "snacks & dessert",
+  DRINKS: "drinking",
   HOME: "home",
   VENMO: "venmo",
   ENTERTAINMENT: "entertainment",
   OTHER: "other",
-  COFFEETEA: "coffee & tea",
-  SUBSCRIPTION: "subscription"
 }

@@ -32,66 +32,53 @@ const chartSettings = {
     "rgba(173,26,114, 0.3)",
     "rgba(224,62,62,  0.3)",
   ]
-}
+};
 
-const PieChart = (props: { data:ISpendingSummary } ) => {
+const PieChart = (props: { data: SpendingSummary["byCategory"] } ) => {
   const { data } = props;
   const [chartData, setChartData] = useState({
-    labels: data.byCategory.map((e) => e.label),
+    labels: data.map((e) => e.label),
     datasets: [
       {
-        data: data.byCategory.map((e) => e.amt),
+        data: data.map((e) => e.amt),
         ...chartSettings
       }
     ]
-  })
+  });
 
   useEffect(() => {
     setChartData({
-      labels: data.byCategory.map((e) => e.label),
+      labels: data.map((e) => e.label),
       datasets: [
         { 
-          data: data.byCategory.map((e) => e.amt),
+          data: data.map((e) => e.amt),
           ...chartSettings
         }
       ]
     })
-  }, [data])
+  }, [data]);
 
-  const options:ChartOptions<"doughnut"> = {
-    layout: {
-      padding: 0
-    },
+  const total = chartData.datasets[0].data.reduce((acc, value) => acc + value, 0);
+
+  const options: ChartOptions<"doughnut"> = {
     plugins: {
       legend: {
-        position: "right",
+        position: "left",
         labels: {
-          filter: (item, context) => {
-            // removes unused categories from legend
-            return context.datasets[0].data[item.index ?? 0] !== 0 
-          },
-          sort: (a, b) => {
-            // sorts in alphabetical order
-            return (a.text > b.text) ? 1 : -1;
-          }
+          filter: (item, context) => context.datasets[0].data[item.index ?? 0] !== 0,
+          sort: (a, b) => (a.text > b.text) ? 1 : -1 
         }
       },
       tooltip: {
-        displayColors: false,
-        titleAlign: "center",
-        bodyAlign: "center",
-        padding: 8,
         callbacks: {
           title: (context) => {
-            let title = context[0].label || "category";
-            const total = context[0].dataset.data.reduce((a, b) => a+b);
-            title += ` (${~~(context[0].parsed/total * 100)}%)`;
-            return title;
+            const title = context[0].label || "category";
+            const percent = (context[0].parsed/total*100).toFixed(1);
+            return `${title} (${percent}%)`;
           },
           label: (context) => {
-            let label = context.dataset.label || '';
-            label += toDollar(context.parsed);
-            return label;
+            let value = context.raw as number;
+            return ` ${toDollar(-1*value)}`;
           }
         }
       }

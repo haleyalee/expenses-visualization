@@ -1,22 +1,26 @@
 // This file contains types for the database layer
 
-interface IExpense {
+interface Expense {
   name: string,
-  category: string[],
+  category: string,
   date: string,
   amount: number
 }
 
-interface IDatabase {
-  title: string,
-  expenses: IExpense[]
+interface MonthlyExpenses {
+  date: string,
+  expenses: Expense[];
 }
 
-interface ISpendingSummary {
+interface Database {
   title: string,
+  expenses: MonthlyExpenses[]
+}
+
+interface SpendingSummary {
+  date: string,
   byCategory: ({ label: string, amt: number })[]
-  totalExpense: { label: string, amt: number },
-  totalIncome: { label: string, amt: number },
-  netSpending: { label: string, amt: number },
-  dayAvgSpending: { label: string, amt: number },
+  totalExpense: { label: string, amt: string },
+  totalIncome: { label: string, amt: string },
+  netSpending: { label: string, amt: string },
 }

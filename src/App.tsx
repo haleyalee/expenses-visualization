@@ -1,48 +1,71 @@
 import React, { useEffect, useState } from 'react';
 import Axios from 'axios';
-import {CATEGORY} from './constants/expenses';
-import { getSpendingSummary } from './helper';
+import { getToday, getSpendingSummary } from './helper';
 import PieChart from './PieChart';
-import { toDollar } from './helper';
 
 function App() {
-  const [database, setDatabase] = useState<IDatabase>({
-    title: 'Expenses',
+  const [db, setDb] = useState<Database>({
+    title: "2024",
     expenses: []
   });
 
-  const [data, setData] = useState<ISpendingSummary>({
-    title: "Title",
-    byCategory: [{label: "Category", amt: 0}],
-    totalExpense: { label: "Total Expenses", amt: 0 },
-    totalIncome: { label: "Total Income", amt: 0 },
-    netSpending: { label: "Net Spending", amt: 0 },
-    dayAvgSpending: { label: "Avg Spending Per Day", amt: 0 },
-  })
+  const [analyzedDb, setAnalyzedDb] = useState<SpendingSummary[]>(
+    [{
+      date: "YYYY-MM",
+      byCategory: [{label: "Category", amt: 0}],
+      totalExpense: { label: "Total Expenses", amt: "$0.00" },
+      totalIncome: { label: "Total Income", amt: "$0.00" },
+      netSpending: { label: "Net Spending", amt: "$0.00" },
+    }]
+  );
 
+  const [displayedData, setDisplayedData] = useState<SpendingSummary>(
+    {
+      date: "YYYY-MM",
+      byCategory: [{label: "Category", amt: 0}],
+      totalExpense: { label: "Total Expenses", amt: "$0.00" },
+      totalIncome: { label: "Total Income", amt: "$0.00" },
+      netSpending: { label: "Net Spending", amt: "$0.00" },
+    }
+  );
+
+  const today = getToday();
+  const [date, setDate] = useState<string>(today);
+  
   useEffect(() => {
-    Axios.get('http://localhost:8000/getExpenses')
-    .then(response => setDatabase(response.data))
-    .catch(err => console.log(err));
+    Axios.get("http://localhost:8000/getExpenses")
+    .then(response => {
+      // Get all expense data
+      setDb(response.data);
+      return response.data;
+    })
+    .then(db => { 
+      // Analyze expense data by month
+      const monthlyAnalysis = db.expenses?.map((month: MonthlyExpenses) => getSpendingSummary(month));
+      setAnalyzedDb(monthlyAnalysis);
+    })
+    .catch(err => console.log(`Error fetching expense data: ${err}`));
   }, []);
 
   useEffect(() => {
-    setData(getSpendingSummary(database))
-  }, [database]);
+    analyzedDb.forEach((month, idx) => {
+      if (month.date === today) {
+        setDisplayedData(analyzedDb[idx]);
+      };
+    });
+  }, [today, analyzedDb, db]);
 
   return (
     <>
       <h1>My expenses</h1>
-      {database && <>
-        <h2>Expense Breakdown for {database.title}</h2>
+      {db && <>
+        <h2>Expense Breakdown for {displayedData.date}</h2>
         <div style={{display: 'flex', width: "50%", justifyContent: 'center', alignItems: 'center'}}>
-          <PieChart data={data}/>
+          <PieChart data={displayedData.byCategory}/>
         </div>
-        {/* <h3>Groceries total: { data.byCategory.filter((c) => c.label===CATEGORY.GROCERIES)[0].amt }</h3> */}
-        <h3>Total expenses: { toDollar(data.totalExpense.amt) }</h3>
-        <h3>Total income: { toDollar(data.totalIncome.amt) }</h3>
-        <h3>Net spending: { toDollar(data.netSpending.amt) }</h3>
-        <h3>Average spending: { toDollar(data.dayAvgSpending.amt) } /day</h3>
+        <h3>Total expenses: { displayedData.totalExpense.amt }</h3>
+        <h3>Total income: { displayedData.totalIncome.amt }</h3>
+        <h3>Net spending: { displayedData.netSpending.amt }</h3>
       </>}
     </>
   );

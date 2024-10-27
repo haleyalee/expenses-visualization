@@ -29,8 +29,7 @@ function App() {
     }
   );
 
-  const today = getToday();
-  const [date, setDate] = useState<string>(today);
+  const [currentMonth, setCurrentMonth] = useState<string>(getToday());
   
   useEffect(() => {
     Axios.get("http://localhost:8000/getExpenses")
@@ -48,18 +47,47 @@ function App() {
   }, []);
 
   useEffect(() => {
-    analyzedDb.forEach((month, idx) => {
-      if (month.date === today) {
-        setDisplayedData(analyzedDb[idx]);
-      };
-    });
-  }, [today, analyzedDb, db]);
+    const currentMonthData = analyzedDb.find(month => month.date === currentMonth);
+    if (currentMonthData) setDisplayedData(currentMonthData);
+  }, [currentMonth, analyzedDb]);
+
+  const handlePreviousMonth = () => {
+    const monthIndex = analyzedDb.findIndex(month => month.date === currentMonth);
+    if (monthIndex > 0) {
+      setCurrentMonth(analyzedDb[monthIndex - 1].date);
+    }
+  };
+
+  const handleNextMonth = () => {
+    const monthIndex = analyzedDb.findIndex(month => month.date === currentMonth);
+    if (monthIndex < analyzedDb.length - 1) {
+      setCurrentMonth(analyzedDb[monthIndex + 1].date);
+    }
+  };
+
+  const handleSelectMonth = (event) => {
+    setCurrentMonth(event.target.value);
+  };
 
   return (
     <>
       <h1>My expenses</h1>
       {db && <>
         <h2>Expense Breakdown for {displayedData.date}</h2>
+
+        {/* Month Navigation */}
+        <div style={{ marginBottom: '20px' }}>
+          <button onClick={handlePreviousMonth} disabled={currentMonth === analyzedDb[0]?.date}>Previous</button>
+          <select onChange={handleSelectMonth} value={currentMonth}>
+            {analyzedDb.map((month) => (
+              <option key={month.date} value={month.date}>
+                {month.date}
+              </option>
+            ))}
+          </select>
+          <button onClick={handleNextMonth} disabled={currentMonth === analyzedDb[analyzedDb.length - 1]?.date || currentMonth >= getToday()}>Next</button>
+        </div>
+
         <div style={{display: 'flex', width: "50%", justifyContent: 'center', alignItems: 'center'}}>
           <PieChart data={displayedData.byCategory}/>
         </div>

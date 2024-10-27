@@ -71,6 +71,7 @@ export const getSpendingSummary = (month: MonthlyExpenses): SpendingSummary => {
       { label: CATEGORY.DRINKS, amt: sumCategory(month.expenses, CATEGORY.DRINKS) },
       { label: CATEGORY.ENTERTAINMENT, amt: sumCategory(month.expenses, CATEGORY.ENTERTAINMENT) },
       { label: CATEGORY.OTHER, amt: sumCategory(month.expenses, CATEGORY.OTHER) },
+      { label: CATEGORY.HOME, amt: sumCategory(month.expenses, CATEGORY.HOME) },
     ],
     totalExpense: { label: "Total Expenses", amt: toDollar(totalExpense(month.expenses)) },
     totalIncome: { label: "Total Income", amt: toDollar(totalIncome(month.expenses)) },

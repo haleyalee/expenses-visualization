@@ -1,13 +1,23 @@
 :root {
   --primary: rgba(105,64,165, 1);
   --accent: rgba(105,64,165, 0.3);
+  --shopping: rgba(155,154,151,0.3);
+  --eatingOut: rgba(100,71,58,  0.3);
+  --transportation: rgba(217,115,13, 0.3);
+  --groceries: rgba(223,171,1,  0.3);
+  --drinking: rgba(15,123,108, 0.3);
+  --entertainment: rgba(11,110,153, 0.3);
+  --home: rgba(105,64,165, 0.3);
+  --other: rgba(173,26,114, 0.3);
+  --income: rgba(224,62,62,  0.3);
   background-image: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
   min-height: 100vh;
+  min-width: 100vw;
 }
 
 body {
   margin: 0;
-  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: 'Montserrat', 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -71,10 +81,16 @@ button:disabled {
 
 .dash {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-around;
   width: 80%;
   margin: 1rem auto;
+}
+
+.dash div:first-child {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
   gap: 50px;
 }
 
@@ -82,6 +98,10 @@ button:disabled {
   padding: 2rem;
   border-radius: 8px;
   box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
+}
+
+.widget h3 {
+  margin-top: 0;
 }
 
 .pie-chart {
@@ -101,4 +121,131 @@ button:disabled {
 
 .spending-summary table td:last-child {
   text-align: right;
+}
+
+.spending-details {
+  margin-top: 50px;
+}
+
+.spending-details table {
+  width: 100%;
+}
+
+.spending-details th {
+  text-align: left;
+  padding-bottom: 0.5rem;
+}
+
+.spending-details td {
+  padding: 0.25rem 0;
+}
+
+.income {
+  background-color: var(--income);
+  color: white;
+  font-size: 0.75rem;
+  margin: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
+  text-align: center;
+  margin: auto;
+}
+
+.shopping {
+  background-color: var(--shopping);
+  color: white;
+  font-size: 0.75rem;
+  margin: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
+  text-align: center;
+  margin: auto;
+}
+
+.eating-out {
+  background-color: var(--eatingOut);
+  color: white;
+  font-size: 0.75rem;
+  margin: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
+  text-align: center;
+  margin: auto;
+}
+
+.transportation {
+  background-color: var(--transportation);
+  color: white;
+  font-size: 0.75rem;
+  margin: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
+  text-align: center;
+  margin: auto;
+}
+
+.groceries {
+  background-color: var(--groceries);
+  color: white;
+  font-size: 0.75rem;
+  margin: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
+  text-align: center;
+  margin: auto;
+}
+
+.drinking {
+  background-color: var(--drinking);
+  color: white;
+  font-size: 0.75rem;
+  margin: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
+  text-align: center;
+  margin: auto;
+}
+
+.home {
+  background-color: var(--home);
+  color: white;
+  font-size: 0.75rem;
+  margin: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
+  text-align: center;
+  margin: auto;
+}
+
+.venmo {
+  background-color: var(--venmo);
+  color: white;
+  font-size: 0.75rem;
+  margin: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
+  text-align: center;
+  margin: auto;
+}
+
+.entertainment {
+  background-color: var(--entertainment);
+  color: white;
+  font-size: 0.75rem;
+  margin: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
+  text-align: center;
+  margin: auto;
+}
+
+.other {
+  background-color: var(--other);
+  color: white;
+  font-size: 0.75rem;
+  margin: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
+  text-align: center;
+  margin: auto;
 }

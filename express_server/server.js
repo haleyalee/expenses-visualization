@@ -77,7 +77,7 @@ app.get('/getExpenses', async(req, res) => {
     // Extract and transform data for the requested month
     const expenses = results.map((e) => ({
       name: e.properties.Source.title[0]?.plain_text || "Unnamed",
-      category: e.properties.Category.multi_select[0]?.name || "No category",
+      category: e.properties.Category.multi_select[0]?.name || "",
       date: e.properties.Date.date.start || "No date",
       amount: e.properties.Amount.number || 0,
     }));

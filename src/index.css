@@ -1,13 +1,104 @@
+:root {
+  --primary: rgba(105,64,165, 1);
+  --accent: rgba(105,64,165, 0.3);
+  background-image: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
+  min-height: 100vh;
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  padding: 1rem 3rem;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.header {
+  margin-bottom: 2rem;
+}
+
+.header h1 {
+  margin: 8px;
+}
+
+.header p {
+  margin: 8px;
+  font-style: italic;
+}
+
+a {
+  color: black;
+}
+
+a:hover {
+  color: var(--accent);
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+h2 {
+  min-width: 300px;
+  text-align: center;
+}
+
+button {
+  min-width: 125px;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  box-shadow: rgba(0, 0, 0, 0.18) 0px 2px 4px;
+  border: none;
+}
+
+button:hover {
+  transform: scale(1.01);
+  cursor: pointer;
+}
+
+button:disabled {
+  pointer-events: none;
+}
+
+.dash {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 80%;
+  margin: 1rem auto;
+  gap: 50px;
+}
+
+.widget {
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
+}
+
+.pie-chart {
+  display: flex;
+  width: 75%;
+  justify-content: center;
+  align-items: center;
+}
+
+.spending-summary {
+  min-width: 300px;
+}
+
+.spending-summary td {
+  min-width: 125px;
+} 
+
+.spending-summary table td:last-child {
+  text-align: right;
 }

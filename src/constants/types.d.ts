@@ -14,7 +14,7 @@ interface MonthlyExpenses {
 
 interface Database {
   title: string,
-  expenses: MonthlyExpenses[]
+  expenses: MonthlyExpenses
 }
 
 interface SpendingSummary {

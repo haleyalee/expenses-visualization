@@ -7,6 +7,67 @@ export const getToday = (): string => {
   return `${year}-${month}`
 }
 
+export const getPreviousMonth = (month) => {
+  const [YYYY, MM] = month.split("-");
+  const date = new Date(Number(YYYY), Number(MM) - 1, 1);
+  date.setMonth(date.getMonth() - 1);
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+};
+
+export const getNextMonth = (month) => {
+  const [YYYY, MM] = month.split("-");
+  const date = new Date(Number(YYYY), Number(MM) - 1, 1);
+  date.setMonth(date.getMonth() + 1);
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+};
+
+export const getDateString = (month) => {
+  const [YYYY, MM] = month.split("-");
+  let monthStr: string;
+  switch (MM) {
+    case "01":
+      monthStr = "January";
+      break;
+    case "02":
+      monthStr = "February";
+      break;
+    case "03":
+      monthStr = "March";
+      break;
+    case "04":
+      monthStr = "April";
+      break;
+    case "05":
+      monthStr = "May";
+      break;
+    case "06":
+      monthStr = "June";
+      break;
+    case "07":
+      monthStr = "July";
+      break;
+    case "08":
+      monthStr = "August";
+      break;
+    case "09":
+      monthStr = "September";
+      break;
+    case "10":
+      monthStr = "October";
+      break;
+    case "11":
+      monthStr = "November";
+      break;
+    case "12":
+      monthStr = "December";
+      break;
+    default:
+      monthStr = "<Month>";
+  }
+
+  return `${monthStr.toLowerCase()} ${YYYY}`
+};
+
 export const toDollar = (amt: number): string => {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amt);
 };

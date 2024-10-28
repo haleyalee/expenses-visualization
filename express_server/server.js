@@ -20,86 +20,78 @@ const notion = new Client({ auth: authToken });
 const NodeCache = require('node-cache');
 const cache = new NodeCache({ stdTTL: 3600 }); // Cache for 1 hour
 
-// TODO: make more robust
-const months = ["2024-01-01", "2024-02-01", "2024-03-01", "2024-04-01", "2024-05-01", "2024-06-01", 
-  "2024-07-01", "2024-08-01", "2024-09-01", "2024-10-01", "2024-11-01", "2024-12-01"];
+// Helper to get the next month’s start date
+const getNextMonth = (dateString) => {
+  const [year, month] = dateString.split("-");
+  const nextMonth = new Date(year, parseInt(month), 1);
+  nextMonth.setMonth(nextMonth.getMonth());
+  return `${nextMonth.getFullYear()}-${(nextMonth.getMonth() + 1).toString().padStart(2, '0')}-01`;
+};
 
 app.get('/getExpenses', async(req, res) => {
   try {
 
-    const cacheKey = "expensesData";
-    const cachedData = cache.get(cacheKey);
+    const { month } = req.query;
 
-    // check if data is cached
-    if (cachedData) {
-      return res.send({ 
-        title: "2024", 
-        expenses: cachedData
-      });
+    // Validate month parameter
+    if (!month || !/^\d{4}-\d{2}$/.test(month)) {
+      return res.status(400).send("Invalid month format. Expected YYYY-MM.");
     }
 
-    // query Notion API if data is not cached
-    const dbRows = await Promise.all(months.map(async (month, idx) => {          
-      const startDate = month;
-      const endDate = idx < months.length-1 ? months[idx+1] : "2025-01-01";
+    // Check if data for the requested month is cached
+    const cachedMonthKey = `expenses_${month}`;
+    const cachedMonthData = cache.get(cachedMonthKey);
 
-      // filter database by month
-      const row = await notion.databases.query({
-        database_id: dbId,
-        filter: {
-          and: [
-            {
-              property: "Date",
-              date: {
-                "on_or_after": startDate
-              }
-            }, { 
-              property: "Date",
-              date: {
-                "before": endDate
-              }
-            }
-          ]
-        },
-        sorts: [
+    if (cachedMonthData) {
+      return res.send({ title: "Haley's Monthly Expenses", expenses: [cachedMonthData] });
+    }
+
+    // Define date range for the month
+    const startDate = `${month}-01`;
+    const endDate = getNextMonth(month);
+
+
+    // Query Notion API for the specified month 
+    const row = await notion.databases.query({
+      database_id: dbId,
+      filter: {
+        and: [
           {
-            property: 'Date',
-            direction: 'ascending'
+            property: "Date",
+            date: { "on_or_after": startDate },
           },
           {
-            timestamp: 'created_time',
-            direction: 'ascending'
-          }
-        ]
-      });
+            property: "Date",
+            date: { "before": endDate },
+          },
+        ],
+      },
+      sorts: [
+        { property: 'Date', direction: 'ascending' },
+        { timestamp: 'created_time', direction: 'ascending' },
+      ],
+    });
 
-      const { results } = row;
-      
-      // for each month, extract and transform cirtical information about expense
-      const expenses = results.map((e) => {
-        return {
-          name:  e.properties.Source.title[0]?.plain_text || "Unnamed",
-          category: e.properties.Category.multi_select[0]?.name || "No category",
-          date: e.properties.Date.date.start || "No date",
-          amount: e.properties.Amount.number || 0
-        }
-      });
+    const { results } = row;
 
-      const monthExpenses = {
-        date: month.substring(0,7), // YYYY-MM
-        expenses: expenses
-      };
-
-      return monthExpenses;
+    // Extract and transform data for the requested month
+    const expenses = results.map((e) => ({
+      name: e.properties.Source.title[0]?.plain_text || "Unnamed",
+      category: e.properties.Category.multi_select[0]?.name || "No category",
+      date: e.properties.Date.date.start || "No date",
+      amount: e.properties.Amount.number || 0,
     }));
 
-    // cache the result
-    cache.set(cacheKey, dbRows); 
+    const monthData = {
+      date: month, // YYYY-MM
+      expenses: expenses,
+    };
 
-    res.send({ 
-      title: "2024", 
-      expenses: dbRows.length ? dbRows : [] // ensure `expenses` is always an array
-    }); 
+    // Cache the result for this month
+    cache.set(cachedMonthKey, monthData);
+
+    // Return the data for the requested month
+    res.send({ title: "Haley's Monthly Expenses", expenses: [monthData] });
   } catch (error) {
     console.log(`Error getting database: ${error}`);
     res.status(500).send("Error retrieving expenses data");

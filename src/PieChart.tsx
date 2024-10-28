@@ -63,6 +63,7 @@ const PieChart = (props: { data: SpendingSummary["byCategory"] } ) => {
   const options: ChartOptions<"doughnut"> = {
     plugins: {
       legend: {
+        display: true,
         position: "left",
         labels: {
           filter: (item, context) => context.datasets[0].data[item.index ?? 0] !== 0,

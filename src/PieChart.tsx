@@ -85,10 +85,12 @@ const PieChart = (props: { data: SpendingSummary["byCategory"] } ) => {
   }
   
   return (
-    <Doughnut
-      data={chartData}
-      options={options}
-    />
+    <div id="pie-chart" className="widget">
+      <Doughnut
+        data={chartData}
+        options={options}
+      />
+    </div>
   )
 }
 

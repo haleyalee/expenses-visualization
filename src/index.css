@@ -57,12 +57,12 @@ a:hover {
   align-items: center;
 }
 
-h2 {
+.nav h2 {
   min-width: 300px;
   text-align: center;
 }
 
-button {
+.nav button {
   min-width: 125px;
   padding: 0.5rem 1rem;
   border-radius: 8px;
@@ -97,155 +97,113 @@ button:disabled {
 .widget {
   padding: 2rem;
   border-radius: 8px;
-  box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
+  /* box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px; */
+  box-shadow: 0 5px 10px rgba(154,160,185,.05), 0 15px 40px rgba(166,173,201,.2);
+
 }
 
 .widget h3 {
   margin-top: 0;
 }
 
-.pie-chart {
+#pie-chart {
   display: flex;
   width: 75%;
   justify-content: center;
   align-items: center;
 }
 
-.spending-summary {
+#spending-summary {
   min-width: 300px;
 }
 
-.spending-summary td {
+#spending-summary td {
   min-width: 125px;
 } 
 
-.spending-summary table td:last-child {
+#spending-summary table td:last-child {
   text-align: right;
 }
 
-.spending-details {
+#spending-details {
   margin-top: 50px;
 }
 
-.spending-details table {
+.filter {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.category-pill {
+  background-color: lightdark;
+  border: 1px solid #c2c2c2;
+  border-radius: 20px;
+  margin: none;
+  padding: 0.25rem 0.5rem;
+}
+
+.selected {
+  box-shadow: 0 5px 10px rgba(154,160,185,.05), 0 15px 40px rgba(166,173,201,.2);
+  color: white;
+}
+
+#spending-details table {
   width: 100%;
 }
 
-.spending-details th {
+#spending-details th {
   text-align: left;
   padding-bottom: 0.5rem;
 }
 
-.spending-details td {
+#spending-details td {
   padding: 0.25rem 0;
+}
+
+.category {
+  color: white;
+  font-size: 0.75rem;
+  margin: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
+  text-align: center;
+  margin: auto;
 }
 
 .income {
   background-color: var(--income);
-  color: white;
-  font-size: 0.75rem;
-  margin: 0.25rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: 8px;
-  text-align: center;
-  margin: auto;
 }
 
 .shopping {
   background-color: var(--shopping);
-  color: white;
-  font-size: 0.75rem;
-  margin: 0.25rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: 8px;
-  text-align: center;
-  margin: auto;
 }
 
 .eating-out {
   background-color: var(--eatingOut);
-  color: white;
-  font-size: 0.75rem;
-  margin: 0.25rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: 8px;
-  text-align: center;
-  margin: auto;
 }
 
 .transportation {
   background-color: var(--transportation);
-  color: white;
-  font-size: 0.75rem;
-  margin: 0.25rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: 8px;
-  text-align: center;
-  margin: auto;
 }
 
 .groceries {
   background-color: var(--groceries);
-  color: white;
-  font-size: 0.75rem;
-  margin: 0.25rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: 8px;
-  text-align: center;
-  margin: auto;
 }
 
 .drinking {
   background-color: var(--drinking);
-  color: white;
-  font-size: 0.75rem;
-  margin: 0.25rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: 8px;
-  text-align: center;
-  margin: auto;
 }
 
 .home {
   background-color: var(--home);
-  color: white;
-  font-size: 0.75rem;
-  margin: 0.25rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: 8px;
-  text-align: center;
-  margin: auto;
-}
-
-.venmo {
-  background-color: var(--venmo);
-  color: white;
-  font-size: 0.75rem;
-  margin: 0.25rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: 8px;
-  text-align: center;
-  margin: auto;
 }
 
 .entertainment {
   background-color: var(--entertainment);
-  color: white;
-  font-size: 0.75rem;
-  margin: 0.25rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: 8px;
-  text-align: center;
-  margin: auto;
 }
 
 .other {
   background-color: var(--other);
-  color: white;
-  font-size: 0.75rem;
-  margin: 0.25rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: 8px;
-  text-align: center;
-  margin: auto;
 }

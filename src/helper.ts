@@ -126,10 +126,10 @@ export const getSpendingSummary = (month: MonthlyExpenses): SpendingSummary => {
     date: month.date,
     byCategory: [
       { label: CATEGORY.SHOPPING, amt: sumCategory(month.expenses, CATEGORY.SHOPPING) },
-      { label: CATEGORY.EATOUT, amt: sumCategory(month.expenses, CATEGORY.EATOUT) },
+      { label: CATEGORY.EATINGOUT, amt: sumCategory(month.expenses, CATEGORY.EATINGOUT) },
       { label: CATEGORY.TRANSPORTATION, amt: sumCategory(month.expenses, CATEGORY.TRANSPORTATION) },
       { label: CATEGORY.GROCERIES, amt: sumCategory(month.expenses, CATEGORY.GROCERIES) },
-      { label: CATEGORY.DRINKS, amt: sumCategory(month.expenses, CATEGORY.DRINKS) },
+      { label: CATEGORY.DRINKING, amt: sumCategory(month.expenses, CATEGORY.DRINKING) },
       { label: CATEGORY.ENTERTAINMENT, amt: sumCategory(month.expenses, CATEGORY.ENTERTAINMENT) },
       { label: CATEGORY.OTHER, amt: sumCategory(month.expenses, CATEGORY.OTHER) },
       { label: CATEGORY.HOME, amt: sumCategory(month.expenses, CATEGORY.HOME) },

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import Axios from 'axios';
 import { getToday, getSpendingSummary, getPreviousMonth, getNextMonth, getDateString, toDollar } from './helper';
 import PieChart from './PieChart';
+import SpendingSummary from './SpendingSummary';
+import SpendingDetailsTable from './SpendingDetailsTable';
 
 function App() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
@@ -58,50 +60,14 @@ function App() {
           <div className="dash">
             <div>
               {/* Pie Chart */}
-              <div className="widget pie-chart">
-                <PieChart data={displayedData.byCategory} />
-              </div>
+              <PieChart data={displayedData.byCategory} />
 
               {/* Spending Summary */}
-              <div className="widget spending-summary">
-                <h3>spending summary</h3>
-                <table>
-                  <tr>
-                    <td>total expenses</td>
-                    <td>{displayedData.totalExpense.amt}</td>
-                  </tr>
-                  <tr>
-                    <td>total income</td>
-                    <td>{displayedData.totalIncome.amt}</td>
-                  </tr>
-                  <tr>
-                    <td>net spending</td>
-                    <td>{displayedData.netSpending.amt}</td>
-                  </tr>
-                </table>
-              </div>
+              <SpendingSummary data={displayedData} />
             </div>
 
             {/* Spending details */}
-            <div className="widget spending-details">
-              <h3>spending details</h3>
-              <table className="expense-table">
-                <thead>
-                  <th>source</th>
-                  <th>category</th>
-                  <th>date</th>
-                  <th>amount</th>
-                </thead>
-                {expenses && expenses.map((e, idx) =>
-                  <tr key={idx}>
-                    <td>{e.name}</td>
-                    <td><span className={e.category.replace(" ", "-")}>{e.category}</span></td>
-                    <td>{e.date}</td>
-                    <td>{toDollar(e.amount)}</td>
-                  </tr>
-                )}
-              </table>
-            </div>
+            <SpendingDetailsTable expenses={expenses} />
           </div>
         </>
           

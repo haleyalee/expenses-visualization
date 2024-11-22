@@ -10,11 +10,30 @@ function App() {
   const [analyzedDb, setAnalyzedDb] = useState<SpendingSummary[]>([]);
   const [displayedData, setDisplayedData] = useState<SpendingSummary | null>(null);
   const [currentMonth, setCurrentMonth] = useState<string>(getToday());
+  const [pendingClicks, setPendingClicks] = useState<number>(0);
   
   // Fetch data for the initially selected month
   useEffect(() => {
     fetchMonthData(currentMonth);
   }, [currentMonth]);
+
+  // Debounce effect: Wait for the user to stop clicking
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (pendingClicks !== 0) {
+        setCurrentMonth((prevMonth) => {
+          let newMonth = prevMonth;
+          for (let i = 0; i < Math.abs(pendingClicks); i++) {
+            newMonth = pendingClicks > 0 ? getNextMonth(newMonth) : getPreviousMonth(newMonth);
+          }
+          // do not allow to navigate to disabled months
+          return newMonth >= getToday() ? getToday() : newMonth;
+        });
+        setPendingClicks(0);
+      }
+    }, 300);
+    return () => clearTimeout(timer); // Cleanup timer on effect re-run
+  }, [pendingClicks]);
 
   const fetchMonthData = async (month) => {
     try {
@@ -34,13 +53,15 @@ function App() {
   };
 
   const handlePreviousMonth = () => {
-    const previousMonth = getPreviousMonth(currentMonth);
-    setCurrentMonth(previousMonth);
+    // const previousMonth = getPreviousMonth(currentMonth);
+    // setCurrentMonth(previousMonth);
+    setPendingClicks((prev) => prev - 1);
   };
 
   const handleNextMonth = () => {
-    const nextMonth = getNextMonth(currentMonth);
-    setCurrentMonth(nextMonth);
+    // const nextMonth = getNextMonth(currentMonth);
+    // setCurrentMonth(nextMonth);
+    setPendingClicks((prev) => prev + 1);
   };
 
   return (

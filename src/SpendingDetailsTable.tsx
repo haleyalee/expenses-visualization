@@ -9,6 +9,7 @@ const SpendingDetailsTable = (props: { expenses: Expense[] } ) => {
   const [filter, setFilter] = useState<Set<string>>(new Set());
   const [filteredExpenses, setFilteredExpenses] = useState<Expense[]>(expenses);
 
+  // Filter expense data by categories selected
   useEffect(() => {
     if (filter.size > 0) {
       setFilteredExpenses(expenses.filter(exp => filter.has(exp.category)));
@@ -25,7 +26,6 @@ const SpendingDetailsTable = (props: { expenses: Expense[] } ) => {
     const category = e.target.value;
     const newFilter = new Set(filter);
 
-    // Remove category filter from Set if already present, else add
     if (newFilter.has(category)) newFilter.delete(category);
     else newFilter.add(category);
 
@@ -38,10 +38,16 @@ const SpendingDetailsTable = (props: { expenses: Expense[] } ) => {
 
       <div className="filter">
         {categories.map((c) => {
+          const isSelected = filter.has(c);
+          const pillColor = `--${categoryColor(c)}`;
+
           return (
             <button 
               key={c} 
-              className={`category-pill ${filter.has(c) ? `selected ${categoryColor(c)}` : ""}`}
+              className={`category-pill ${isSelected ? "selected" : ""}`}
+              style={{
+                backgroundColor: isSelected? `var(${pillColor})` : "#E6E6E6",
+              } as React.CSSProperties }
               value={c}
               onClick={(e) => handleClick(e)}
             >

@@ -1,8 +1,10 @@
+/* TODO: implemen as Mui styled components instead of in css */
+
 :root {
   --primary: rgba(105,64,165, 1);
   --accent: rgba(105,64,165, 0.3);
   --shopping: rgba(155,154,151,0.3);
-  --eatingOut: rgba(100,71,58,  0.3);
+  --eating-out: rgba(100,71,58,  0.3);
   --transportation: rgba(217,115,13, 0.3);
   --groceries: rgba(223,171,1,  0.3);
   --drinking: rgba(15,123,108, 0.3);
@@ -97,7 +99,6 @@ button:disabled {
 .widget {
   padding: 2rem;
   border-radius: 8px;
-  /* box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px; */
   box-shadow: 0 5px 10px rgba(154,160,185,.05), 0 15px 40px rgba(166,173,201,.2);
 
 }
@@ -137,7 +138,7 @@ button:disabled {
 }
 
 .category-pill {
-  background-color: lightdark;
+  transition: background-color 0.3s;
   border: 1px solid #c2c2c2;
   border-radius: 20px;
   margin: none;
@@ -181,7 +182,7 @@ button:disabled {
 }
 
 .eating-out {
-  background-color: var(--eatingOut);
+  background-color: var(--eating-out);
 }
 
 .transportation {

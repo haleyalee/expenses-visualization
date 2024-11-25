@@ -21,7 +21,7 @@ export const getNextMonth = (month) => {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
 };
 
-export const getDateString = (month) => {
+export const getDateString = (month = "MM-YYYY") => {
   const [YYYY, MM] = month.split("-");
   let monthStr: string;
   switch (MM) {
@@ -62,7 +62,7 @@ export const getDateString = (month) => {
       monthStr = "December";
       break;
     default:
-      monthStr = "<Month>";
+      monthStr = "Month";
   }
 
   return `${monthStr.toLowerCase()} ${YYYY}`

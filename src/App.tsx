@@ -69,9 +69,9 @@ function App() {
       </div>
       
       <div className="nav">
-        <button onClick={handlePreviousMonth} disabled={currentMonth <= "2024-01"}>previous month</button>
+        <button onClick={handlePreviousMonth} disabled={currentMonth <= "2024-01"}>&lt;</button>
         <h2>{getDateString(displayedData?.date)}</h2>
-        <button onClick={handleNextMonth} disabled={currentMonth >= getToday()}>next month</button>
+        <button onClick={handleNextMonth} disabled={currentMonth >= getToday()}>&gt;</button>
       </div>
 
       { loading ? (

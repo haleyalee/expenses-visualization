@@ -92,6 +92,7 @@ button:disabled {
   justify-content: space-around;
   width: 90%;
   margin: 1rem auto;
+  animation: fade-in 0.5s ease-in-out;
 }
 
 .dash div:first-child {
@@ -230,6 +231,15 @@ button:disabled {
 @keyframes shimmer {
   100% {
     mask-position: left
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 
